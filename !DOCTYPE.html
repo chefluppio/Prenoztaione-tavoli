@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Prenotazioni Pizzeria</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #b22222; }
+    .sala { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+    .tavolo { margin: 5px; padding: 10px; border: 1px solid #999; border-radius: 5px; display: inline-block; }
+    .prenotato { background: #f8d7da; }
+    .libero { background: #d4edda; }
+  </style>
+</head>
+<body>
+  <h1>Gestione Prenotazioni Pizzeria</h1>
+
+  <div>
+    <h2>Nuova Prenotazione</h2>
+    <form id="formPrenotazione">
+      Nome cliente: <input type="text" id="nome" required><br>
+      Numero persone: <input type="number" id="persone" min="1" required><br>
+      Data e ora: <input type="datetime-local" id="data" required><br>
+      <button type="submit">Prenota</button>
+    </form>
+  </div>
+
+  <h2>Sale e Tavoli</h2>
+  <div id="sale"></div>
+
+  <script>
+    // Definizione sale e tavoli
+    const sale = [
+      { id: 1, nome: "Sala Rossa", tavoli: [
+        { id: 1, posti: 2 },
+        { id: 2, posti: 4 },
+        { id: 3, posti: 4 }
+      ]},
+      { id: 2, nome: "Sala Verde", tavoli: [
+        { id: 4, posti: 6 },
+        { id: 5, posti: 2 }
+      ]}
+    ];
+
+    const prenotazioni = [];
+
+    function renderSale() {
+      const container = document.getElementById('sale');
+      container.innerHTML = '';
+
+      sale.forEach(sala => {
+        const divSala = document.createElement('div');
+        divSala.className = 'sala';
+        divSala.innerHTML = `<h3>${sala.nome}</h3>`;
+
+        sala.tavoli.forEach(tavolo => {
+          const occupato = prenotazioni.some(p => p.tavoloId === tavolo.id);
+          const divTavolo = document.createElement('div');
+          divTavolo.className = 'tavolo ' + (occupato ? 'prenotato' : 'libero');
+          divTavolo.innerText = `Tavolo ${tavolo.id} - Posti: ${tavolo.posti}`;
+          divSala.appendChild(divTavolo);
+        });
+
+        container.appendChild(divSala);
+      });
+    }
+
+    document.getElementById('formPrenotazione').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value;
+      const persone = parseInt(document.getElementById('persone').value);
+      const data = document.getElementById('data').value;
+
+      // Trova tavolo libero adatto
+      let tavoloDisponibile = null;
+      for (let sala of sale) {
+        for (let tavolo of sala.tavoli) {
+          const occupato = prenotazioni.some(p => p.tavoloId === tavolo.id && p.data === data);
+          if (!occupato && tavolo.posti >= persone) {
+            tavoloDisponibile = tavolo;
+            break;
+          }
+        }
+        if (tavoloDisponibile) break;
+      }
+
+      if (tavoloDisponibile) {
+        prenotazioni.push({ nome, persone, data, tavoloId: tavoloDisponibile.id });
+        alert(`Prenotazione confermata: Tavolo ${tavoloDisponibile.id}`);
+      } else {
+        alert('Nessun tavolo disponibile per questo orario.');
+      }
+
+      renderSale();
+    });
+
+    renderSale();
+  </script>
+</body>
+</html>
