@@ -2,15 +2,35 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prenotazioni Pizzeria</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
+    body { font-family: Arial, sans-serif; margin: 10px; padding: 0; text-align: center; }
     h1 { color: #b22222; }
-    .sala { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-    .tavolo { margin: 5px; padding: 10px; border: 1px solid #999; border-radius: 5px; display: inline-block; color: #fff; }
+    .sala { margin-bottom: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; justify-items: center; }
+    .tavolo { padding: 20px; border: 1px solid #999; border-radius: 5px; color: #fff; text-align: center; font-size: 18px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
     .libero { background: #28a745; }
     .occupato { background: #4b0082; }
-    .whatsapp-btn { background: #25D366; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    input, .whatsapp-btn { width: 90%; padding: 16px; margin: 8px 0; font-size: 20px; border-radius: 5px; border: 1px solid #999; }
+    .whatsapp-btn { background: #25D366; color: white; border: none; cursor: pointer; }
+
+    /* Media Queries per tablet */
+    @media (min-width: 600px) and (max-width: 1024px) {
+      .tavolo { width: 100px; height: 100px; font-size: 22px; }
+      input, .whatsapp-btn { width: 70%; font-size: 22px; }
+    }
+
+    /* Media Queries per PC */
+    @media (min-width: 1025px) {
+      .tavolo { width: 120px; height: 120px; font-size: 24px; }
+      input, .whatsapp-btn { width: 50%; font-size: 22px; }
+    }
+
+    /* Mobile small screen */
+    @media (max-width: 599px) {
+      .tavolo { width: 80px; height: 80px; font-size: 18px; }
+      input, .whatsapp-btn { width: 95%; font-size: 20px; }
+    }
   </style>
 </head>
 <body>
@@ -19,22 +39,22 @@
   <div>
     <h2>Nuova Prenotazione</h2>
     <form id="formPrenotazione">
-      Nome cliente: <input type="text" id="nome" required><br>
-      Numero persone: <input type="number" id="persone" min="1" required><br>
-      Data e ora: <input type="datetime-local" id="data" required><br>
+      <input type="text" id="nominativo" placeholder="Nominativo" required><br>
+      <input type="number" id="persone" placeholder="Numero persone" min="1" required><br>
+      <input type="datetime-local" id="data" required><br>
       <button type="submit" class="whatsapp-btn">Prenota via WhatsApp</button>
     </form>
   </div>
 
   <h2>Stato Sala</h2>
-  <div id="sale"></div>
+  <div id="sale" class="sala"></div>
 
   <script>
-    const numeroWhatsApp = '+393493282672'; // numero del personale fisso
+    const numeroWhatsApp = '+393493282672';
 
     const sale = [{ id: 1, nome: "Sala Uno", tavoli: [] }];
-    for (let i = 1; i <= 20; i++) {
-      sale[0].tavoli.push({ id: i, posti: 4 });
+    for (let i = 1; i <= 16; i++) {
+      sale[0].tavoli.push({ id: i, posti: 4, label: 'T' + i });
     }
 
     const prenotazioni = [];
@@ -43,17 +63,14 @@
       const container = document.getElementById('sale');
       container.innerHTML = '';
       sale.forEach(sala => {
-        const divSala = document.createElement('div');
-        divSala.className = 'sala';
-        divSala.innerHTML = `<h3>${sala.nome}</h3>`;
         sala.tavoli.forEach(tavolo => {
           const occupato = prenotazioni.some(p => p.tavoliCoinvolti.includes(tavolo.id) && p.data === dataRiferimento);
           const divTavolo = document.createElement('div');
           divTavolo.className = 'tavolo ' + (occupato ? 'occupato' : 'libero');
-          divTavolo.innerText = `Tavolo ${tavolo.id} - Posti: ${tavolo.posti}`;
-          divSala.appendChild(divTavolo);
+          const cliente = occupato ? prenotazioni.find(p => p.tavoliCoinvolti.includes(tavolo.id) && p.data === dataRiferimento).nominativo : '';
+          divTavolo.innerHTML = `<div>${tavolo.label}</div><div style='font-size:14px; margin-top:5px;'>${cliente}</div>`;
+          container.appendChild(divTavolo);
         });
-        container.appendChild(divSala);
       });
     }
 
@@ -74,16 +91,16 @@
 
     document.getElementById('formPrenotazione').addEventListener('submit', function(e) {
       e.preventDefault();
-      const nome = document.getElementById('nome').value;
+      const nominativo = document.getElementById('nominativo').value;
       const persone = parseInt(document.getElementById('persone').value);
       const data = document.getElementById('data').value;
 
       const tavoliSelezionati = trovaTavoli(persone, data);
 
       if (tavoliSelezionati) {
-        prenotazioni.push({ nome, persone, data, tavoliCoinvolti: tavoliSelezionati.map(t => t.id) });
-        alert(`Prenotazione confermata per ${persone} persone: Tavoli ${tavoliSelezionati.map(t => t.id).join(', ')}`);
-        const messaggio = `Prenotazione confermata per ${nome}: ${persone} persone, Tavoli ${tavoliSelezionati.map(t => t.id).join(', ')}, Data/Ora: ${data}`;
+        prenotazioni.push({ nominativo, persone, data, tavoliCoinvolti: tavoliSelezionati.map(t => t.id) });
+        alert(`Prenotazione confermata per ${persone} persone: Tavoli ${tavoliSelezionati.map(t => t.label).join(', ')}`);
+        const messaggio = `Prenotazione confermata per ${nominativo}: ${persone} persone, Tavoli ${tavoliSelezionati.map(t => t.label).join(', ')}, Data/Ora: ${data}`;
         mandaWhatsApp(numeroWhatsApp, messaggio);
       } else {
         alert('Nessun tavolo disponibile per questo orario.');
