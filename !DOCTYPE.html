@@ -7,9 +7,10 @@
     body { font-family: Arial, sans-serif; margin: 20px; }
     h1 { color: #b22222; }
     .sala { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-    .tavolo { margin: 5px; padding: 10px; border: 1px solid #999; border-radius: 5px; display: inline-block; }
-    .prenotato { background: #f8d7da; }
-    .libero { background: #d4edda; }
+    .tavolo { margin: 5px; padding: 10px; border: 1px solid #999; border-radius: 5px; display: inline-block; color: #fff; }
+    .libero { background: #28a745; }
+    .occupato { background: #4b0082; }
+    .whatsapp-btn { background: #25D366; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 16px; }
   </style>
 </head>
 <body>
@@ -21,48 +22,54 @@
       Nome cliente: <input type="text" id="nome" required><br>
       Numero persone: <input type="number" id="persone" min="1" required><br>
       Data e ora: <input type="datetime-local" id="data" required><br>
-      <button type="submit">Prenota</button>
+      <button type="submit" class="whatsapp-btn">Prenota via WhatsApp</button>
     </form>
   </div>
 
-  <h2>Sale e Tavoli</h2>
+  <h2>Stato Sala</h2>
   <div id="sale"></div>
 
   <script>
-    // Definizione sale e tavoli
-    const sale = [
-      { id: 1, nome: "Sala Rossa", tavoli: [
-        { id: 1, posti: 2 },
-        { id: 2, posti: 4 },
-        { id: 3, posti: 4 }
-      ]},
-      { id: 2, nome: "Sala Verde", tavoli: [
-        { id: 4, posti: 6 },
-        { id: 5, posti: 2 }
-      ]}
-    ];
+    const numeroWhatsApp = '+393493282672'; // numero del personale fisso
+
+    const sale = [{ id: 1, nome: "Sala Uno", tavoli: [] }];
+    for (let i = 1; i <= 20; i++) {
+      sale[0].tavoli.push({ id: i, posti: 4 });
+    }
 
     const prenotazioni = [];
 
-    function renderSale() {
+    function renderSale(dataRiferimento) {
       const container = document.getElementById('sale');
       container.innerHTML = '';
-
       sale.forEach(sala => {
         const divSala = document.createElement('div');
         divSala.className = 'sala';
         divSala.innerHTML = `<h3>${sala.nome}</h3>`;
-
         sala.tavoli.forEach(tavolo => {
-          const occupato = prenotazioni.some(p => p.tavoloId === tavolo.id);
+          const occupato = prenotazioni.some(p => p.tavoliCoinvolti.includes(tavolo.id) && p.data === dataRiferimento);
           const divTavolo = document.createElement('div');
-          divTavolo.className = 'tavolo ' + (occupato ? 'prenotato' : 'libero');
+          divTavolo.className = 'tavolo ' + (occupato ? 'occupato' : 'libero');
           divTavolo.innerText = `Tavolo ${tavolo.id} - Posti: ${tavolo.posti}`;
           divSala.appendChild(divTavolo);
         });
-
         container.appendChild(divSala);
       });
+    }
+
+    function trovaTavoli(persone, data) {
+      const tavoliLiberi = sale[0].tavoli.filter(t => !prenotazioni.some(p => p.tavoliCoinvolti.includes(t.id) && p.data === data));
+      const tavoliNecessari = Math.ceil(persone / 4);
+      if (tavoliLiberi.length >= tavoliNecessari) {
+        return tavoliLiberi.slice(0, tavoliNecessari);
+      }
+      return null;
+    }
+
+    function mandaWhatsApp(numero, messaggio) {
+      const testo = encodeURIComponent(messaggio);
+      const url = `https://api.whatsapp.com/send?phone=${numero}&text=${testo}`;
+      window.open(url, '_blank');
     }
 
     document.getElementById('formPrenotazione').addEventListener('submit', function(e) {
@@ -71,30 +78,21 @@
       const persone = parseInt(document.getElementById('persone').value);
       const data = document.getElementById('data').value;
 
-      // Trova tavolo libero adatto
-      let tavoloDisponibile = null;
-      for (let sala of sale) {
-        for (let tavolo of sala.tavoli) {
-          const occupato = prenotazioni.some(p => p.tavoloId === tavolo.id && p.data === data);
-          if (!occupato && tavolo.posti >= persone) {
-            tavoloDisponibile = tavolo;
-            break;
-          }
-        }
-        if (tavoloDisponibile) break;
-      }
+      const tavoliSelezionati = trovaTavoli(persone, data);
 
-      if (tavoloDisponibile) {
-        prenotazioni.push({ nome, persone, data, tavoloId: tavoloDisponibile.id });
-        alert(`Prenotazione confermata: Tavolo ${tavoloDisponibile.id}`);
+      if (tavoliSelezionati) {
+        prenotazioni.push({ nome, persone, data, tavoliCoinvolti: tavoliSelezionati.map(t => t.id) });
+        alert(`Prenotazione confermata per ${persone} persone: Tavoli ${tavoliSelezionati.map(t => t.id).join(', ')}`);
+        const messaggio = `Prenotazione confermata per ${nome}: ${persone} persone, Tavoli ${tavoliSelezionati.map(t => t.id).join(', ')}, Data/Ora: ${data}`;
+        mandaWhatsApp(numeroWhatsApp, messaggio);
       } else {
         alert('Nessun tavolo disponibile per questo orario.');
       }
 
-      renderSale();
+      renderSale(data);
     });
 
-    renderSale();
+    renderSale(null);
   </script>
 </body>
 </html>
