@@ -1,115 +1,234 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prenotazioni Pizzeria</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 10px; padding: 0; text-align: center; }
-    h1 { color: #b22222; }
-    .sala { margin-bottom: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; justify-items: center; }
-    .tavolo { padding: 20px; border: 1px solid #999; border-radius: 5px; color: #fff; text-align: center; font-size: 18px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-    .libero { background: #28a745; }
-    .occupato { background: #4b0082; }
-    input, .whatsapp-btn { width: 90%; padding: 16px; margin: 8px 0; font-size: 20px; border-radius: 5px; border: 1px solid #999; }
-    .whatsapp-btn { background: #25D366; color: white; border: none; cursor: pointer; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prenotazioni Pizzeria</title>
+<style>
+:root{
+  --green: #28a745;
+  --red: #dc3545;
+  --yellow: #ffc107;
+  --whatsapp: #25D366;
+  --gap: 10px;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 10px;
+  padding: 0;
+  text-align: center;
+  background: #fff;
+  color: #222;
+}
+/* Titolo 3D */
+.titolo3d {
+  font-size: 42px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #ff4500;
+  text-shadow: 
+    2px 2px 0 #000,
+    4px 4px 0 #444,
+    6px 6px 0 #888;
+  margin-bottom: 6px;
+}
+h2 { margin: 8px 0; font-size: 20px; }
+/* Sala 4x4 */
+.sala {
+  margin: 12px auto 30px;
+  width: 100%;
+  max-width: 440px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+  justify-items: center;
+  align-items: center;
+}
+/* Tavolo quadrato */
+.tavolo {
+  width: 88px;
+  height: 88px;
+  min-width: 88px;
+  min-height: 88px;
+  padding: 8px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  cursor: pointer;
+}
+.tavolo .label { font-weight: 700; font-size: 18px; line-height: 1; }
+.tavolo .cliente { margin-top: 6px; font-size: 14px; line-height: 1; max-width: 100%; word-break: break-word; }
+.libero { background-color: var(--green); }
+.occupato { background-color: var(--red); }
+.warning { background-color: var(--yellow); color: #222; }
 
-    /* Media Queries per tablet */
-    @media (min-width: 600px) and (max-width: 1024px) {
-      .tavolo { width: 100px; height: 100px; font-size: 22px; }
-      input, .whatsapp-btn { width: 70%; font-size: 22px; }
-    }
-
-    /* Media Queries per PC */
-    @media (min-width: 1025px) {
-      .tavolo { width: 120px; height: 120px; font-size: 24px; }
-      input, .whatsapp-btn { width: 50%; font-size: 22px; }
-    }
-
-    /* Mobile small screen */
-    @media (max-width: 599px) {
-      .tavolo { width: 80px; height: 80px; font-size: 18px; }
-      input, .whatsapp-btn { width: 95%; font-size: 20px; }
-    }
-  </style>
+/* Form */
+.form-wrap { margin: 6px auto; max-width: 440px; }
+form { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+.whatsapp-btn {
+  width: 95%;
+  max-width: 440px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  font-size: 18px;
+  box-sizing: border-box;
+}
+input[type="datetime-local"] { font-size: 18px; padding: 12px; }
+.whatsapp-btn {
+  background: var(--whatsapp);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+.info { font-size: 14px; color: #444; margin-top: 6px; margin-bottom: 8px; }
+button.modify-btn, button.delete-btn {
+  margin-top: 4px;
+  padding: 4px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+button.modify-btn { background: #007bff; color: #fff; }
+button.delete-btn { background: #dc3545; color: #fff; }
+</style>
 </head>
 <body>
-  <h1>Gestione Prenotazioni Pizzeria</h1>
+<h1 class="titolo3d">La Fabbrica della Pizza</h1>
 
-  <div>
-    <h2>Nuova Prenotazione</h2>
-    <form id="formPrenotazione">
-      <input type="text" id="nominativo" placeholder="Nominativo" required><br>
-      <input type="number" id="persone" placeholder="Numero persone" min="1" required><br>
-      <input type="datetime-local" id="data" required><br>
-      <button type="submit" class="whatsapp-btn">Prenota via WhatsApp</button>
-    </form>
-  </div>
+<div class="form-wrap">
+<h2>Nuova Prenotazione</h2>
+<form id="formPrenotazione" autocomplete="off">
+  <input type="text" id="nominativo" placeholder="Nominativo (es. Rossi Mario)" required />
+  <input type="number" id="persone" placeholder="Numero persone" min="1" required />
+  <input type="datetime-local" id="data" required />
+  <button type="submit" class="whatsapp-btn">Prenota via WhatsApp</button>
+</form>
+<div class="info">Seleziona Data/Ora per vedere i tavoli occupati in quel turno.</div>
+</div>
 
-  <h2>Stato Sala</h2>
-  <div id="sale" class="sala"></div>
+<h2>Stato Sala</h2>
+<div id="sale" class="sala" aria-live="polite"></div>
 
-  <script>
-    const numeroWhatsApp = '+393493282672';
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-    const sale = [{ id: 1, nome: "Sala Uno", tavoli: [] }];
-    for (let i = 1; i <= 16; i++) {
-      sale[0].tavoli.push({ id: i, posti: 4, label: 'T' + i });
+<script>
+const firebaseConfig = {
+  apiKey: "LA_TUA_APIKEY",
+  authDomain: "TUO_PROGETTO.firebaseapp.com",
+  databaseURL: "https://TUO_PROGETTO.firebaseio.com",
+  projectId: "TUO_PROGETTO",
+  storageBucket: "TUO_PROGETTO.appspot.com",
+  messagingSenderId: "TUO_SENDER_ID",
+  appId: "TUO_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const numeroWhatsApp = '393493282672';
+
+const sale = [{ id:1, nome:"Sala Uno", tavoli:[] }];
+for(let i=1;i<=16;i++){ sale[0].tavoli.push({id:i,posti:4,label:'T'+i}); }
+
+let prenotazioni = [];
+let currentDataFilter = null;
+
+// Funzioni
+function formatDateTime(dStr){ const dt=new Date(dStr); return isNaN(dt)?dStr:dt.toLocaleString(); }
+
+function renderSale(){
+  const container=document.getElementById('sale');
+  container.innerHTML='';
+  const oraAttuale = new Date();
+
+  sale[0].tavoli.forEach(tavolo=>{
+    const occ = prenotazioni.find(p=>Array.isArray(p.tavoliCoinvolti)&&p.tavoliCoinvolti.includes(tavolo.id)&&p.data===currentDataFilter);
+    const div=document.createElement('div');
+    let classe='libero';
+    if(occ){
+      const prenotTime = new Date(occ.data);
+      const diffMin = (prenotTime - oraAttuale)/60000;
+      if(diffMin <= -90) classe='libero';
+      else if(diffMin <= 0) classe='warning';
+      else classe='occupato';
     }
+    div.className='tavolo '+classe;
+    const clienteTxt = occ ? `${occ.nominativo} (${occ.persone})` : '';
+    div.innerHTML=`<div class="label">${tavolo.label}</div><div class="cliente">${clienteTxt}</div>`;
+    container.appendChild(div);
+  });
+}
 
-    const prenotazioni = [];
+function trovaTavoli(persone,data){
+  const tavoliLiberi = sale[0].tavoli.filter(t=>!prenotazioni.some(p=>Array.isArray(p.tavoliCoinvolti)&&p.tavoliCoinvolti.includes(t.id)&&p.data===data));
+  const tavoliNecessari = Math.ceil(persone/4);
+  if(tavoliLiberi.length<tavoliNecessari) return null;
+  tavoliLiberi.sort((a,b)=>a.id-b.id);
+  const all = sale[0].tavoli.map(t=>({id:t.id,obj:t,libero:tavoliLiberi.some(x=>x.id===t.id)}));
+  for(let start=0;start<=all.length-tavoliNecessari;start++){
+    let ok=true; const block=[];
+    for(let k=0;k<tavoliNecessari;k++){ if(!all[start+k].libero){ ok=false; break;} block.push(all[start+k].obj); }
+    if(ok) return block;
+  }
+  return tavoliLiberi.slice(0,tavoliNecessari);
+}
 
-    function renderSale(dataRiferimento) {
-      const container = document.getElementById('sale');
-      container.innerHTML = '';
-      sale.forEach(sala => {
-        sala.tavoli.forEach(tavolo => {
-          const occupato = prenotazioni.some(p => p.tavoliCoinvolti.includes(tavolo.id) && p.data === dataRiferimento);
-          const divTavolo = document.createElement('div');
-          divTavolo.className = 'tavolo ' + (occupato ? 'occupato' : 'libero');
-          const cliente = occupato ? prenotazioni.find(p => p.tavoliCoinvolti.includes(tavolo.id) && p.data === dataRiferimento).nominativo : '';
-          divTavolo.innerHTML = `<div>${tavolo.label}</div><div style='font-size:14px; margin-top:5px;'>${cliente}</div>`;
-          container.appendChild(divTavolo);
-        });
-      });
-    }
+function mandaWhatsApp(numero,messaggio){
+  const testo=encodeURIComponent(messaggio);
+  window.open(`https://api.whatsapp.com/send?phone=${numero}&text=${testo}`,'_blank');
+}
 
-    function trovaTavoli(persone, data) {
-      const tavoliLiberi = sale[0].tavoli.filter(t => !prenotazioni.some(p => p.tavoliCoinvolti.includes(t.id) && p.data === data));
-      const tavoliNecessari = Math.ceil(persone / 4);
-      if (tavoliLiberi.length >= tavoliNecessari) {
-        return tavoliLiberi.slice(0, tavoliNecessari);
-      }
-      return null;
-    }
+// Eventi
+const dataInput=document.getElementById('data');
+dataInput.addEventListener('change',()=>{ currentDataFilter=dataInput.value||null; caricaPrenotazioni(currentDataFilter); });
 
-    function mandaWhatsApp(numero, messaggio) {
-      const testo = encodeURIComponent(messaggio);
-      const url = `https://api.whatsapp.com/send?phone=${numero}&text=${testo}`;
-      window.open(url, '_blank');
-    }
+function caricaPrenotazioni(dataFilter){
+  if(!dataFilter) return;
+  db.ref('prenotazioni').orderByChild('data').equalTo(dataFilter).on('value',snapshot=>{
+    const data=snapshot.val();
+    prenotazioni=[];
+    if(data) Object.entries(data).forEach(([id,p])=>{ prenotazioni.push({...p,id}); });
+    renderSale();
+  });
+}
 
-    document.getElementById('formPrenotazione').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const nominativo = document.getElementById('nominativo').value;
-      const persone = parseInt(document.getElementById('persone').value);
-      const data = document.getElementById('data').value;
+document.getElementById('formPrenotazione').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const nominativo=document.getElementById('nominativo').value.trim();
+  const persone=parseInt(document.getElementById('persone').value,10);
+  const data=document.getElementById('data').value;
+  if(!nominativo||!persone||!data){ alert('Compila tutti i campi.'); return; }
+  currentDataFilter=data;
+  const tavoliSelezionati = trovaTavoli(persone,data);
+  if(!tavoliSelezionati){ alert('Nessun tavolo disponibile per questo orario.'); return; }
+  const prenotazione = {nominativo,persone,data,tavoliCoinvolti:tavoliSelezionati.map(t=>t.id)};
+  try{
+    await db.ref('prenotazioni').push(prenotazione);
+    const tavoliLabels = tavoliSelezionati.map(t=>t.label).join(', ');
+    const messaggio = `Prenotazione: ${nominativo} - ${persone} persone - Tavoli: ${tavoliLabels} - Data/Ora: ${formatDateTime(data)}`;
+    mandaWhatsApp(numeroWhatsApp,messaggio);
+    alert(`Prenotazione confermata: Tavoli ${tavoliLabels}`);
+  }catch(err){ console.error(err); alert('Errore durante il salvataggio.'); }
+});
 
-      const tavoliSelezionati = trovaTavoli(persone, data);
+// Inizializzazione
+currentDataFilter=dataInput.value||null;
+if(currentDataFilter) caricaPrenotazioni(currentDataFilter);
 
-      if (tavoliSelezionati) {
-        prenotazioni.push({ nominativo, persone, data, tavoliCoinvolti: tavoliSelezionati.map(t => t.id) });
-        alert(`Prenotazione confermata per ${persone} persone: Tavoli ${tavoliSelezionati.map(t => t.label).join(', ')}`);
-        const messaggio = `Prenotazione confermata per ${nominativo}: ${persone} persone, Tavoli ${tavoliSelezionati.map(t => t.label).join(', ')}, Data/Ora: ${data}`;
-        mandaWhatsApp(numeroWhatsApp, messaggio);
-      } else {
-        alert('Nessun tavolo disponibile per questo orario.');
-      }
+// Aggiorna colori ogni minuto
+setInterval(renderSale,60000);
 
-      renderSale(data);
-    });
-
-    renderSale(null);
-  </script>
+</script>
 </body>
 </html>
