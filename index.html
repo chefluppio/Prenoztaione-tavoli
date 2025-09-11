@@ -4,232 +4,245 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestione Sala e Locali</title>
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- Font Awesome per icone -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <style>
-    /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
     body {
-      background: linear-gradient(135deg, #0a3d62, #3c6382);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 500px;
-      padding: 20px;
-    }
-
-    /* Titolo */
-    .title-box {
-      text-align: center;
-      margin-bottom: 30px;
-      padding: 20px;
-      border-radius: 20px;
-      background: linear-gradient(145deg, #1e5799, #2575fc);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-      transform: perspective(600px) rotateX(0deg);
-      transition: transform 0.3s;
-    }
-
-    .title-box:hover {
-      transform: perspective(600px) rotateX(5deg);
-    }
-
-    .title-box h1 {
-      font-size: 1.8rem;
-      font-weight: 600;
-    }
-
-    /* Pulsanti Home */
-    .menu {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #ffffff; /* Sfondo bianco */
+      color: #333;
       display: flex;
       flex-direction: column;
-      gap: 20px;
-    }
-
-    .menu button {
-      padding: 18px;
-      border: none;
-      border-radius: 18px;
-      background: linear-gradient(145deg, #3498db, #2980b9);
-      color: white;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
       align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Navbar moderna */
+    .navbar {
+      width: 100%;
+      background: linear-gradient(90deg, #1e3c72, #2a5298);
+      display: flex;
+      flex-direction: column;
       justify-content: center;
-      gap: 12px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
+      align-items: center;
+      padding: 20px 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
     }
 
-    .menu button:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-    }
-
-    /* Sezioni nascoste */
-    .page {
-      display: none;
-      animation: fadeIn 0.4s ease;
-    }
-
-    .active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Form Prenota Tavolo */
-    .form-box {
-      background: linear-gradient(145deg, #1e5799, #2575fc);
-      padding: 25px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .form-box h2 {
+    .navbar h1 {
+      margin: 0;
+      font-size: 1.6em;
+      color: #fff;
       text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.5rem;
-      font-weight: 600;
+      letter-spacing: 1px;
     }
 
-    .form-box label {
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 5px;
+    .navbar-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .navbar a {
+      color: #fff;
+      text-decoration: none;
+      margin: 5px 15px;
+      font-size: 1.1em;
+      padding: 8px 15px;
+      border-radius: 10px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(5px);
+    }
+
+    .navbar a:hover {
+      background: #ffffff;
+      color: #1e3c72;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Container principale centrato */
+    .container {
+      margin-top: 160px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 1000px;
+      padding: 0 20px;
+      box-sizing: border-box;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Card 3D centrati */
+    .card {
+      background: #1e3c72;
+      color: white;
+      border-radius: 20px;
+      padding: 35px 25px;
+      width: 250px;
+      text-align: center;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+      transform: perspective(1000px) translateZ(0);
+      transition: transform 0.4s, background 0.4s, box-shadow 0.4s;
+      cursor: pointer;
       font-weight: 500;
     }
 
-    .form-box input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      font-size: 1rem;
-      margin-bottom: 10px;
+    .card:hover {
+      transform: perspective(1000px) translateZ(25px);
+      background: #2a5298;
+      box-shadow: 0 18px 30px rgba(0,0,0,0.5);
     }
 
-    .form-box button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(145deg, #27ae60, #219150);
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.3em;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .card {
+        width: 80%;
+      }
+
+      .navbar h1 {
+        font-size: 1.4em;
+      }
+
+      .navbar a {
+        margin: 5px 10px;
+        font-size: 1em;
+      }
+    }
+
+    /* Sezioni nascoste */
+    .section {
+      display: none;
+      margin-top: 160px;
+      padding: 20px;
+      max-width: 600px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* Pulsante WhatsApp */
+    .whatsapp-btn {
+      background: #25D366;
       color: white;
-      font-size: 1.1rem;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 30px;
+      font-size: 1.1em;
       cursor: pointer;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 20px;
+      transition: 0.3s;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
     }
 
-    .form-box button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    .whatsapp-btn:hover {
+      background: #1ebe5b;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
 
-    .back-btn {
-      margin-top: 15px;
-      background: linear-gradient(145deg, #e74c3c, #c0392b);
+    input, select {
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      width: 80%;
+      box-sizing: border-box;
+      font-size: 1em;
     }
   </style>
 </head>
 <body>
-  <div class="container">
 
-    <!-- HOME -->
-    <div id="home" class="page active">
-      <div class="title-box">
-        <h1>Gestione Sala e Locali</h1>
-      </div>
-      <div class="menu">
-        <button onclick="showPage('prenota')"><i class="fa-solid fa-chair"></i> Prenota Tavolo</button>
-        <button onclick="showPage('prodotti')"><i class="fa-solid fa-box"></i> Gestione Prodotti</button>
-        <button onclick="showPage('ordina')"><i class="fa-solid fa-utensils"></i> Ordina Pietanze</button>
-      </div>
-    </div>
-
-    <!-- PRENOTA TAVOLO -->
-    <div id="prenota" class="page">
-      <div class="form-box">
-        <h2><i class="fa-solid fa-calendar-check"></i> Prenota Tavolo</h2>
-        <label for="nome">Nome Cliente</label>
-        <input type="text" id="nome" placeholder="Inserisci il tuo nome">
-
-        <label for="persone">Numero Persone</label>
-        <input type="number" id="persone" placeholder="Es. 4">
-
-        <label for="data">Data</label>
-        <input type="date" id="data">
-
-        <label for="ora">Ora</label>
-        <input type="time" id="ora">
-
-        <button onclick="prenotaWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Prenota tramite WhatsApp</button>
-        <button class="back-btn" onclick="showPage('home')">⬅ Torna alla Home</button>
-      </div>
-    </div>
-
-    <!-- GESTIONE PRODOTTI (placeholder) -->
-    <div id="prodotti" class="page">
-      <div class="form-box">
-        <h2><i class="fa-solid fa-box"></i> Gestione Prodotti</h2>
-        <p>Sezione in costruzione...</p>
-        <button class="back-btn" onclick="showPage('home')">⬅ Torna alla Home</button>
-      </div>
-    </div>
-
-    <!-- ORDINA PIETANZE (placeholder) -->
-    <div id="ordina" class="page">
-      <div class="form-box">
-        <h2><i class="fa-solid fa-utensils"></i> Ordina Pietanze</h2>
-        <p>Sezione in costruzione...</p>
-        <button class="back-btn" onclick="showPage('home')">⬅ Torna alla Home</button>
-      </div>
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>Gestione Sala e Locali</h1>
+    <div class="navbar-links">
+      <a href="#" onclick="showSection('home')">🏠 Home</a>
+      <a href="#" onclick="showSection('prenota')">📅 Prenota Tavolo</a>
+      <a href="#" onclick="showSection('ordini')">📦 Gestione Ordini</a>
+      <a href="#" onclick="showSection('menu')">📖 Menù</a>
     </div>
   </div>
 
+  <!-- Home -->
+  <div class="container section active" id="home">
+    <div class="card" onclick="showSection('prenota')">
+      <h2>📅 Prenota Tavolo</h2>
+    </div>
+    <div class="card" onclick="showSection('ordini')">
+      <h2>📦 Gestione Ordini</h2>
+    </div>
+    <div class="card" onclick="showSection('menu')">
+      <h2>📖 Menù</h2>
+    </div>
+  </div>
+
+  <!-- Prenota Tavolo -->
+  <div id="prenota" class="section">
+    <h2>Prenota un Tavolo</h2>
+    <input type="text" id="nomeCliente" placeholder="Nome Cliente">
+    <input type="number" id="numeroPersone" placeholder="Numero di Persone">
+    <input type="date" id="dataPrenotazione">
+    <input type="time" id="oraPrenotazione">
+    <button class="whatsapp-btn" onclick="inviaPrenotazione()">Prenota tramite WhatsApp</button>
+    <p id="confermaMsg"></p>
+  </div>
+
+  <!-- Gestione Ordini -->
+  <div id="ordini" class="section">
+    <h2>Gestione Ordini</h2>
+    <p>Qui i gestori potranno inserire i loro prodotti a km 0.</p>
+  </div>
+
+  <!-- Menù -->
+  <div id="menu" class="section">
+    <h2>Menù</h2>
+    <p>Qui il cliente potrà ordinare i piatti direttamente a casa.</p>
+  </div>
+
   <script>
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      window.scrollTo(0, 0);
     }
 
-    function prenotaWhatsApp() {
-      const nome = document.getElementById("nome").value;
-      const persone = document.getElementById("persone").value;
-      const data = document.getElementById("data").value;
-      const ora = document.getElementById("ora").value;
+    function inviaPrenotazione() {
+      let nome = document.getElementById('nomeCliente').value;
+      let persone = document.getElementById('numeroPersone').value;
+      let data = document.getElementById('dataPrenotazione').value;
+      let ora = document.getElementById('oraPrenotazione').value;
 
       if (!nome || !persone || !data || !ora) {
-        alert("Per favore compila tutti i campi prima di prenotare.");
+        alert("Compila tutti i campi!");
         return;
       }
 
-      const messaggio = `Prenotazione Tavolo:%0A- Nome: ${nome}%0A- Persone: ${persone}%0A- Data: ${data}%0A- Ora: ${ora}`;
-      const url = `https://wa.me/?text=${messaggio}`;
-      window.open(url, "_blank");
+      let messaggio = `Prenotazione tavolo:\n- Nome: ${nome}\n- Persone: ${persone}\n- Data: ${data}\n- Ora: ${ora}`;
+      let telefono = "39xxxxxxxxxx"; // <-- inserisci numero WhatsApp del locale
+      let url = `https://wa.me/${telefono}?text=${encodeURIComponent(messaggio)}`;
+
+      window.open(url, '_blank');
+      document.getElementById('confermaMsg').innerText = "Prenotazione inviata, il gestore confermerà a breve.";
     }
   </script>
 </body>
