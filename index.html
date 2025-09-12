@@ -1,249 +1,158 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestione Sala e Locali</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #ffffff; /* Sfondo bianco */
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    /* Navbar moderna */
-    .navbar {
-      width: 100%;
-      background: linear-gradient(90deg, #1e3c72, #2a5298);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px 10px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-      border-bottom-left-radius: 15px;
-      border-bottom-right-radius: 15px;
-    }
-
-    .navbar h1 {
-      margin: 0;
-      font-size: 1.6em;
-      color: #fff;
-      text-align: center;
-      letter-spacing: 1px;
-    }
-
-    .navbar-links {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 10px;
-      width: 100%;
-    }
-
-    .navbar a {
-      color: #fff;
-      text-decoration: none;
-      margin: 5px 15px;
-      font-size: 1.1em;
-      padding: 8px 15px;
-      border-radius: 10px;
-      transition: all 0.3s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(5px);
-    }
-
-    .navbar a:hover {
-      background: #ffffff;
-      color: #1e3c72;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    }
-
-    /* Container principale centrato */
-    .container {
-      margin-top: 160px;
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      flex-wrap: wrap;
-      width: 100%;
-      max-width: 1000px;
-      padding: 0 20px;
-      box-sizing: border-box;
-      align-items: center;
-      text-align: center;
-    }
-
-    /* Card 3D centrati */
-    .card {
-      background: #1e3c72;
-      color: white;
-      border-radius: 20px;
-      padding: 35px 25px;
-      width: 250px;
-      text-align: center;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
-      transform: perspective(1000px) translateZ(0);
-      transition: transform 0.4s, background 0.4s, box-shadow 0.4s;
-      cursor: pointer;
-      font-weight: 500;
-    }
-
-    .card:hover {
-      transform: perspective(1000px) translateZ(25px);
-      background: #2a5298;
-      box-shadow: 0 18px 30px rgba(0,0,0,0.5);
-    }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 1.3em;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .card {
-        width: 80%;
-      }
-
-      .navbar h1 {
-        font-size: 1.4em;
-      }
-
-      .navbar a {
-        margin: 5px 10px;
-        font-size: 1em;
-      }
-    }
-
-    /* Sezioni nascoste */
-    .section {
-      display: none;
-      margin-top: 160px;
-      padding: 20px;
-      max-width: 600px;
-      text-align: center;
-      box-sizing: border-box;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    /* Pulsante WhatsApp */
-    .whatsapp-btn {
-      background: #25D366;
-      color: white;
-      border: none;
-      padding: 15px 25px;
-      border-radius: 30px;
-      font-size: 1.1em;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: 0.3s;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    }
-
-    .whatsapp-btn:hover {
-      background: #1ebe5b;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-    }
-
-    input, select {
-      padding: 12px;
-      margin: 12px 0;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      width: 80%;
-      box-sizing: border-box;
-      font-size: 1em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RistoApp - Prenota Tavoli e Ordina Cibo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; color: #333; }
+        header { text-align: center; background-color: #FF6200; color: white; padding: 20px; margin: -20px -20px 20px -20px; }
+        nav { text-align: center; margin-bottom: 20px; }
+        nav button { background-color: #FF6200; color: white; border: none; padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px; }
+        nav button:hover { background-color: #e55a00; }
+        section { display: none; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        section.active { display: block; }
+        .restaurant-list, .menu-list, .dashboard-list { list-style: none; padding: 0; }
+        .restaurant-item, .menu-item, .dashboard-item { background: #f0f0f0; margin: 10px 0; padding: 15px; border-radius: 5px; cursor: pointer; }
+        .restaurant-item:hover, .menu-item:hover { background: #e0e0e0; }
+        form { display: flex; flex-direction: column; }
+        input, select, button { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button[type="submit"] { background-color: #FF6200; color: white; border: none; cursor: pointer; }
+        button[type="submit"]:hover { background-color: #e55a00; }
+        .manager-btn { background-color: #4CAF50; }
+        .manager-btn:hover { background-color: #45a049; }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>RistoApp</h1>
+        <p>Prenota tavoli o ordina cibo da ristoranti e pizzerie</p>
+    </header>
 
-  <!-- Navbar -->
-  <div class="navbar">
-    <h1>Gestione Sala e Locali</h1>
-    <div class="navbar-links">
-      <a href="#" onclick="showSection('home')">🏠 Home</a>
-      <a href="#" onclick="showSection('prenota')">📅 Prenota Tavolo</a>
-      <a href="#" onclick="showSection('ordini')">📦 Gestione Ordini</a>
-      <a href="#" onclick="showSection('menu')">📖 Menù</a>
-    </div>
-  </div>
+    <nav>
+        <button onclick="showSection('main')">Home</button>
+        <button onclick="showSection('book')">Prenota Tavolo</button>
+        <button onclick="showSection('order')">Ordina Cibo</button>
+        <button class="manager-btn" onclick="showSection('manager')">Pannello Gestore</button>
+    </nav>
 
-  <!-- Home -->
-  <div class="container section active" id="home">
-    <div class="card" onclick="showSection('prenota')">
-      <h2>📅 Prenota Tavolo</h2>
-    </div>
-    <div class="card" onclick="showSection('ordini')">
-      <h2>📦 Gestione Ordini</h2>
-    </div>
-    <div class="card" onclick="showSection('menu')">
-      <h2>📖 Menù</h2>
-    </div>
-  </div>
+    <section id="main" class="active">
+        <h2>Ristoranti Disponibili</h2>
+        <ul class="restaurant-list">
+            <li class="restaurant-item" onclick="selectRestaurant('Pizzeria Bella Napoli')">
+                Pizzeria Bella Napoli - Pizza e specialità napoletane
+            </li>
+            <li class="restaurant-item" onclick="selectRestaurant('Ristorante La Dolce Vita')">
+                Ristorante La Dolce Vita - Cucina italiana raffinata
+            </li>
+            <li class="restaurant-item" onclick="selectRestaurant('Trattoria Amici')">
+                Trattoria Amici - Piatti casalinghi e pizze
+            </li>
+        </ul>
+        <p>Seleziona un ristorante per procedere con prenotazione o ordine.</p>
+    </section>
 
-  <!-- Prenota Tavolo -->
-  <div id="prenota" class="section">
-    <h2>Prenota un Tavolo</h2>
-    <input type="text" id="nomeCliente" placeholder="Nome Cliente">
-    <input type="number" id="numeroPersone" placeholder="Numero di Persone">
-    <input type="date" id="dataPrenotazione">
-    <input type="time" id="oraPrenotazione">
-    <button class="whatsapp-btn" onclick="inviaPrenotazione()">Prenota tramite WhatsApp</button>
-    <p id="confermaMsg"></p>
-  </div>
+    <section id="book">
+        <h2>Prenota un Tavolo</h2>
+        <form onsubmit="confirmBooking(event)">
+            <label>Ristorante selezionato: <span id="selected-restaurant-book"></span></label>
+            <input type="date" id="date" required>
+            <input type="time" id="time" required>
+            <select id="people" required>
+                <option value="">Numero di persone</option>
+                <option value="1">1 persona</option>
+                <option value="2">2 persone</option>
+                <option value="4">4 persone</option>
+                <option value="6">6+ persone</option>
+            </select>
+            <button type="submit">Conferma Prenotazione</button>
+        </form>
+    </section>
 
-  <!-- Gestione Ordini -->
-  <div id="ordini" class="section">
-    <h2>Gestione Ordini</h2>
-    <p>Qui i gestori potranno inserire i loro prodotti a km 0.</p>
-  </div>
+    <section id="order">
+        <h2>Ordina Cibo</h2>
+        <p>Ristorante selezionato: <span id="selected-restaurant-order"></span></p>
+        <ul class="menu-list">
+            <li class="menu-item" onclick="addToCart('Pizza Margherita - €8.00')">
+                Pizza Margherita - €8.00
+            </li>
+            <li class="menu-item" onclick="addToCart('Spaghetti Carbonara - €10.00')">
+                Spaghetti Carbonara - €10.00
+            </li>
+            <li class="menu-item" onclick="addToCart('Tiramisù - €5.00')">
+                Tiramisù - €5.00
+            </li>
+        </ul>
+        <h3>Carrello</h3>
+        <ul id="cart-list"></ul>
+        <p>Totale: €<span id="total">0</span></p>
+        <button onclick="confirmOrder()">Conferma Ordine</button>
+    </section>
 
-  <!-- Menù -->
-  <div id="menu" class="section">
-    <h2>Menù</h2>
-    <p>Qui il cliente potrà ordinare i piatti direttamente a casa.</p>
-  </div>
+    <section id="manager">
+        <h2>Pannello Gestore</h2>
+        <h3>Prenotazioni Ricevute</h3>
+        <ul class="dashboard-list">
+            <li class="dashboard-item">Tavolo per 4 - Pizzeria Bella Napoli - 12/09/2025, 20:00</li>
+            <li class="dashboard-item">Tavolo per 2 - Ristorante La Dolce Vita - 13/09/2025, 19:30</li>
+        </ul>
+        <h3>Ordini Ricevuti</h3>
+        <ul class="dashboard-list">
+            <li class="dashboard-item">Pizza Margherita x2 - €16.00 - Indirizzo: Via Roma 1</li>
+            <li class="dashboard-item">Spaghetti Carbonara x1 - €10.00 - Indirizzo: Via Milano 5</li>
+        </ul>
+    </section>
 
-  <script>
-    function showSection(sectionId) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.getElementById(sectionId).classList.add('active');
-      window.scrollTo(0, 0);
-    }
+    <script>
+        let selectedRestaurant = '';
+        let cart = [];
+        let total = 0;
 
-    function inviaPrenotazione() {
-      let nome = document.getElementById('nomeCliente').value;
-      let persone = document.getElementById('numeroPersone').value;
-      let data = document.getElementById('dataPrenotazione').value;
-      let ora = document.getElementById('oraPrenotazione').value;
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
 
-      if (!nome || !persone || !data || !ora) {
-        alert("Compila tutti i campi!");
-        return;
-      }
+        function selectRestaurant(restaurant) {
+            selectedRestaurant = restaurant;
+            document.getElementById('selected-restaurant-book').textContent = restaurant;
+            document.getElementById('selected-restaurant-order').textContent = restaurant;
+            alert('Ristorante selezionato: ' + restaurant + '. Ora puoi prenotare o ordinare!');
+        }
 
-      let messaggio = `Prenotazione tavolo:\n- Nome: ${nome}\n- Persone: ${persone}\n- Data: ${data}\n- Ora: ${ora}`;
-      let telefono = "39xxxxxxxxxx"; // <-- inserisci numero WhatsApp del locale
-      let url = `https://wa.me/${telefono}?text=${encodeURIComponent(messaggio)}`;
+        function confirmBooking(event) {
+            event.preventDefault();
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const people = document.getElementById('people').value;
+            if (selectedRestaurant && date && time && people) {
+                alert('Prenotazione confermata per ' + selectedRestaurant + ' il ' + date + ' alle ' + time + ' per ' + people + ' persone!');
+            } else {
+                alert('Compila tutti i campi e seleziona un ristorante!');
+            }
+        }
 
-      window.open(url, '_blank');
-      document.getElementById('confermaMsg').innerText = "Prenotazione inviata, il gestore confermerà a breve.";
-    }
-  </script>
+        function addToCart(item) {
+            cart.push(item);
+            total += parseFloat(item.match(/€([\d.]+)/)[1]);
+            const list = document.getElementById('cart-list');
+            const li = document.createElement('li');
+            li.textContent = item;
+            list.appendChild(li);
+            document.getElementById('total').textContent = total.toFixed(2);
+        }
+
+        function confirmOrder() {
+            if (cart.length > 0 && selectedRestaurant) {
+                alert('Ordine confermato per ' + selectedRestaurant + '! Totale: €' + total.toFixed(2) + '. Dettagli: ' + cart.join(', '));
+                cart = [];
+                total = 0;
+                document.getElementById('cart-list').innerHTML = '';
+                document.getElementById('total').textContent = '0';
+            } else {
+                alert('Aggiungi piatti al carrello e seleziona un ristorante!');
+            }
+        }
+    </script>
 </body>
 </html>
