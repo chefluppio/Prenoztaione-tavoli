@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LocalEat</title>
+  <title>BookMyTable</title>
 
   <!-- Font Zalando Sans Expanded -->
   <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:wght@400;700&display=swap" rel="stylesheet">
@@ -13,118 +13,41 @@
       margin: 0;
       font-family: 'Zalando Sans Expanded', sans-serif;
       background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       overflow-x: hidden;
     }
 
-    /* Navbar */
-    .navbar {
-      background: linear-gradient(135deg, #007bff, #00c6ff);
-      padding: 15px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    /* Hamburger menu */
-    .hamburger {
-      font-size: 30px;
-      cursor: pointer;
-      color: #fff;
-    }
-
-    /* Menu a tendina */
-    .dropdown {
-      position: fixed;
-      top: 0;
-      left: -250px;
-      width: 250px;
-      height: 100%;
-      background: linear-gradient(145deg, #1e3c72, #2a5298);
-      transition: left 0.3s ease;
-      padding-top: 60px;
-      z-index: 1000;
-      box-shadow: 5px 0 15px rgba(0,0,0,0.3);
-    }
-
-    .dropdown a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-      padding: 15px 25px;
-      transition: background 0.3s;
-    }
-
-    .dropdown a:hover {
-      background: rgba(255,255,255,0.1);
-      transform: translateX(10px);
-    }
-
-    .dropdown h2 {
-      color: white;
+    h1.app-name {
+      font-size: 36px;
+      color: #007bff;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 50px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
     }
 
-    /* Logo centrale */
-    .logo {
-      font-size: 28px;
-      color: white;
-      font-weight: 700;
-      text-align: center;
-      flex-grow: 1;
-    }
-
-    /* Container Home */
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: calc(100vh - 60px);
-      text-align: center;
-      padding: 20px;
-    }
-
-    .cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 25px;
-      justify-content: center;
-      margin-top: 40px;
-    }
-
-    .card {
+    /* Pulsante 3D */
+    .button-3d {
       background: linear-gradient(145deg, #f0f0f0, #ffffff);
       border-radius: 20px;
       box-shadow: 10px 10px 25px #d9d9d9, -10px -10px 25px #ffffff;
       padding: 40px 60px;
-      cursor: pointer;
-      transition: all 0.3s ease, transform 0.2s;
-      font-size: 20px;
-      font-weight: 600;
+      font-size: 24px;
+      font-weight: bold;
       color: #007bff;
       text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease, transform 0.2s;
       perspective: 1000px;
+      text-align: center;
     }
 
-    .card:hover {
+    .button-3d:hover {
       transform: rotateY(12deg) rotateX(6deg) scale(1.05);
       box-shadow: 15px 15px 35px #cfcfcf, -15px -15px 35px #ffffff;
-    }
-
-    @media (max-width: 768px) {
-      .cards {
-        flex-direction: column;
-      }
-      .card {
-        width: 80%;
-        padding: 30px;
-      }
     }
 
     /* Pagine */
@@ -132,6 +55,8 @@
       display: none;
       padding: 40px 20px;
       text-align: center;
+      width: 100%;
+      max-width: 500px;
     }
 
     .page.active {
@@ -140,32 +65,24 @@
 
     /* Form prenotazione */
     .form-container {
-      max-width: 500px;
-      margin: auto;
       background: linear-gradient(145deg, #f0f0f0, #ffffff);
       padding: 30px;
       border-radius: 20px;
       box-shadow: 10px 10px 25px #d9d9d9, -10px -10px 25px #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
 
-    .form-container h2 {
-      margin-bottom: 20px;
-      color: #007bff;
-    }
-
-    .form-container input {
-      width: 100%;
+    input {
       padding: 12px;
-      margin: 10px 0;
-      border: none;
       border-radius: 12px;
+      border: none;
       box-shadow: inset 3px 3px 6px #d1d1d1, inset -3px -3px 6px #ffffff;
       font-size: 16px;
     }
 
-    .form-container button {
-      margin-top: 15px;
-      width: 100%;
+    button.form-button {
       padding: 14px;
       border: none;
       border-radius: 12px;
@@ -174,95 +91,74 @@
       font-size: 18px;
       font-weight: bold;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .form-container button:hover {
+    button.form-button:hover {
       transform: scale(1.05);
+      box-shadow: 5px 5px 20px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 480px) {
+      h1.app-name {
+        font-size: 28px;
+        margin-bottom: 30px;
+      }
+      .button-3d {
+        font-size: 20px;
+        padding: 30px 40px;
+      }
+      input {
+        padding: 10px;
+      }
+      button.form-button {
+        padding: 12px;
+      }
     }
 
   </style>
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
-    <div class="logo">LocalEat</div>
-  </nav>
-
-  <!-- Menu a tendina -->
-  <div id="dropdown" class="dropdown">
-    <a href="#" onclick="showPage('home'); toggleMenu()">Home</a>
-    <a href="#" onclick="showPage('prenota'); toggleMenu()">Prenota Tavolo</a>
-    <a href="#" onclick="showPage('menu'); toggleMenu()">Menu</a>
-    <a href="#" onclick="showPage('prodotti'); toggleMenu()">Gestione Prodotti</a>
+  <!-- Home con nome app e pulsante 3D -->
+  <div id="home" class="page active">
+    <h1 class="app-name">BookMyTable</h1>
+    <div class="button-3d" onclick="showPage('prenota')">Prenota Tavolo</div>
   </div>
 
-  <!-- HOME -->
-  <div id="home" class="container page active">
-    <div class="cards">
-      <div class="card" onclick="showPage('prenota')">Prenota Tavolo</div>
-      <div class="card" onclick="showPage('menu')">Menu</div>
-      <div class="card" onclick="showPage('prodotti')">Gestione Prodotti</div>
-    </div>
-  </div>
-
-  <!-- PRENOTA TAVOLO -->
+  <!-- Pagina Prenotazione -->
   <div id="prenota" class="page">
     <div class="form-container">
-      <h2>Prenota il tuo tavolo</h2>
+      <h2>Dettagli Prenotazione</h2>
       <input type="text" id="nome" placeholder="Nome Cliente" required>
       <input type="number" id="persone" placeholder="Numero Persone" required>
       <input type="date" id="data" required>
       <input type="time" id="ora" required>
-      <button onclick="prenotaWhatsApp()">Prenota via WhatsApp</button>
+      <button class="form-button" onclick="prenotaWhatsApp()">Prenota via WhatsApp</button>
+      <button class="form-button" onclick="showPage('home')">Torna alla Home</button>
     </div>
   </div>
 
-  <!-- MENU -->
-  <div id="menu" class="page">
-    <h2>Sezione Menu</h2>
-    <p>Qui compariranno i piatti e le categorie.</p>
-  </div>
-
-  <!-- GESTIONE PRODOTTI -->
-  <div id="prodotti" class="page">
-    <h2>Gestione Prodotti</h2>
-    <p>Qui verranno inseriti i prodotti a km zero.</p>
-  </div>
-
   <script>
-    // Mostra/Nascondi menu
-    function toggleMenu() {
-      const dropdown = document.getElementById('dropdown');
-      if(dropdown.style.left === '0px') {
-        dropdown.style.left = '-250px';
-      } else {
-        dropdown.style.left = '0px';
-      }
-    }
-
-    // Mostra le pagine
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
       window.scrollTo(0,0);
     }
 
-    // Prenotazione WhatsApp
     function prenotaWhatsApp() {
       const nome = document.getElementById('nome').value;
       const persone = document.getElementById('persone').value;
       const data = document.getElementById('data').value;
       const ora = document.getElementById('ora').value;
 
-      if(!nome || !persone || !data || !ora){
+      if(!nome || !persone || !data || !ora) {
         alert("Compila tutti i campi!");
         return;
       }
 
       const messaggio = `Prenotazione Tavolo:%0A- Nome: ${nome}%0A- Persone: ${persone}%0A- Data: ${data}%0A- Ora: ${ora}`;
-      const telefono = "393123456789"; // Numero WhatsApp del locale
+      const telefono = "393123456789"; // Inserisci qui il numero WhatsApp del gestore
       const url = `https://wa.me/${telefono}?text=${messaggio}`;
       window.open(url, "_blank");
     }
