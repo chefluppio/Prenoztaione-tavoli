@@ -4,10 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LocalEat</title>
+
+  <!-- Font Zalando Sans Expanded -->
+  <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Zalando Sans Expanded', sans-serif;
       background: #ffffff;
       overflow-x: hidden;
     }
@@ -15,58 +19,73 @@
     /* Navbar */
     .navbar {
       background: linear-gradient(135deg, #007bff, #00c6ff);
-      padding: 15px 25px;
+      padding: 15px 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       position: sticky;
       top: 0;
       z-index: 1000;
     }
 
-    .navbar h1 {
-      margin: 0;
-      font-size: 26px;
+    /* Hamburger menu */
+    .hamburger {
+      font-size: 30px;
+      cursor: pointer;
       color: #fff;
-      font-weight: bold;
-      letter-spacing: 2px;
-      transform: translateX(-150%);
-      animation: slideIn 1s forwards ease-in-out;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
     }
 
-    @keyframes slideIn {
-      to { transform: translateX(0); }
+    /* Menu a tendina */
+    .dropdown {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 250px;
+      height: 100%;
+      background: linear-gradient(145deg, #1e3c72, #2a5298);
+      transition: left 0.3s ease;
+      padding-top: 60px;
+      z-index: 1000;
+      box-shadow: 5px 0 15px rgba(0,0,0,0.3);
     }
 
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-      margin: 0;
-      padding: 0;
-    }
-
-    .navbar ul li a {
+    .dropdown a {
+      display: block;
+      color: white;
       text-decoration: none;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 500;
-      transition: color 0.3s;
+      font-size: 18px;
+      padding: 15px 25px;
+      transition: background 0.3s;
     }
 
-    .navbar ul li a:hover {
-      color: #222;
+    .dropdown a:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateX(10px);
     }
 
-    /* Contenitore principale */
+    .dropdown h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* Logo centrale */
+    .logo {
+      font-size: 28px;
+      color: white;
+      font-weight: 700;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    /* Container Home */
     .container {
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      height: calc(100vh - 80px);
+      height: calc(100vh - 60px);
       text-align: center;
       padding: 20px;
     }
@@ -98,7 +117,17 @@
       box-shadow: 15px 15px 35px #cfcfcf, -15px -15px 35px #ffffff;
     }
 
-    /* Sezione nascosta di default */
+    @media (max-width: 768px) {
+      .cards {
+        flex-direction: column;
+      }
+      .card {
+        width: 80%;
+        padding: 30px;
+      }
+    }
+
+    /* Pagine */
     .page {
       display: none;
       padding: 40px 20px;
@@ -152,29 +181,22 @@
       transform: scale(1.05);
     }
 
-    @media (max-width: 768px) {
-      .cards {
-        flex-direction: column;
-      }
-      .card {
-        width: 80%;
-        padding: 30px;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
   <nav class="navbar">
-    <h1>LocalEat</h1>
-    <ul>
-      <li><a href="#" onclick="showPage('home')">Home</a></li>
-      <li><a href="#" onclick="showPage('prenota')">Prenota Tavolo</a></li>
-      <li><a href="#" onclick="showPage('menu')">Menu</a></li>
-      <li><a href="#" onclick="showPage('prodotti')">Gestione Prodotti</a></li>
-    </ul>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="logo">LocalEat</div>
   </nav>
+
+  <!-- Menu a tendina -->
+  <div id="dropdown" class="dropdown">
+    <a href="#" onclick="showPage('home'); toggleMenu()">Home</a>
+    <a href="#" onclick="showPage('prenota'); toggleMenu()">Prenota Tavolo</a>
+    <a href="#" onclick="showPage('menu'); toggleMenu()">Menu</a>
+    <a href="#" onclick="showPage('prodotti'); toggleMenu()">Gestione Prodotti</a>
+  </div>
 
   <!-- HOME -->
   <div id="home" class="container page active">
@@ -197,39 +219,50 @@
     </div>
   </div>
 
-  <!-- MENU (vuoto per ora) -->
+  <!-- MENU -->
   <div id="menu" class="page">
     <h2>Sezione Menu</h2>
     <p>Qui compariranno i piatti e le categorie.</p>
   </div>
 
-  <!-- GESTIONE PRODOTTI (vuoto per ora) -->
+  <!-- GESTIONE PRODOTTI -->
   <div id="prodotti" class="page">
     <h2>Gestione Prodotti</h2>
     <p>Qui verranno inseriti i prodotti a km zero.</p>
   </div>
 
   <script>
-    // Funzione per mostrare le pagine
+    // Mostra/Nascondi menu
+    function toggleMenu() {
+      const dropdown = document.getElementById('dropdown');
+      if(dropdown.style.left === '0px') {
+        dropdown.style.left = '-250px';
+      } else {
+        dropdown.style.left = '0px';
+      }
+    }
+
+    // Mostra le pagine
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
+      window.scrollTo(0,0);
     }
 
-    // Funzione per inviare la prenotazione su WhatsApp
+    // Prenotazione WhatsApp
     function prenotaWhatsApp() {
       const nome = document.getElementById('nome').value;
       const persone = document.getElementById('persone').value;
       const data = document.getElementById('data').value;
       const ora = document.getElementById('ora').value;
 
-      if (!nome || !persone || !data || !ora) {
+      if(!nome || !persone || !data || !ora){
         alert("Compila tutti i campi!");
         return;
       }
 
       const messaggio = `Prenotazione Tavolo:%0A- Nome: ${nome}%0A- Persone: ${persone}%0A- Data: ${data}%0A- Ora: ${ora}`;
-      const telefono = "393123456789"; // <- Numero WhatsApp del locale
+      const telefono = "393123456789"; // Numero WhatsApp del locale
       const url = `https://wa.me/${telefono}?text=${messaggio}`;
       window.open(url, "_blank");
     }
